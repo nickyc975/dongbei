@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
-"""dongbei语言执行器
+"""sichuan语言执行器
 
 用法：
-    dongbei.py 源程序文件名...XS
+  sichuan.py 源程序文件名...XS
 """
 
 import io
@@ -12,10 +12,10 @@ import re
 import sys
 
 KW_BANG = u'！'
-KW_BECOME = u'装'
-KW_BEGIN = u'开整：'
-KW_CALL = u'整'
-KW_CHECK = u'瞅瞅：'
+KW_BECOME = u'巴倒'
+KW_BEGIN = u'开始：'
+KW_CALL = u'喊'
+KW_CHECK = u'看哈儿：'
 KW_CLOSE_PAREN = u'）'
 KW_CLOSE_PAREN_NARROW = ')'
 KW_CLOSE_QUOTE = u'”'
@@ -23,36 +23,36 @@ KW_COLON = u'：'
 KW_COMMA = u'，'
 KW_COMMA_NARROW = ','
 KW_COMPARE = u'比'
-KW_COMPARE_WITH = u'跟'
+KW_COMPARE_WITH = u'跟倒'
 KW_CONCAT = u'、'
-KW_DEC = u'退退'
-KW_DEC_BY = u'退'
+KW_DEC = u'倒起走哈儿'
+KW_DEC_BY = u'倒起走'
 KW_DIVIDE_BY = u'除以'
-KW_ELSE = u'要不行咧就'
-KW_END = u'整完了'
-KW_END_LOOP = u'磨叽完了'
-KW_EQUAL = u'一样一样的'
+KW_ELSE = u'不是呢话'
+KW_END = u'刹脚'
+KW_END_LOOP = u'转完了'
+KW_EQUAL = u'一模一样呢'
 KW_FROM = u'从'
-KW_FUNC_DEF = u'咋整：'
+KW_FUNC_DEF = u'啷个办：'
 KW_GREATER = u'大'
-KW_INC = u'走走'
+KW_INC = u'走哈儿'
 KW_INC_BY = u'走'
-KW_IS_VAR = u'是活雷锋'
+KW_IS_VAR = u'凶得很'
 KW_LESS = u'小'
-KW_LOOP = u'磨叽：'
+KW_LOOP = u'打转转儿：'
 KW_MINUS = u'减'
-KW_NOT_EQUAL = u'不是一样一样的'
+KW_NOT_EQUAL = u'不一样'
 KW_OPEN_PAREN = u'（'
 KW_OPEN_PAREN_NARROW = '('
 KW_OPEN_QUOTE = u'“'
 KW_PERIOD = u'。'
 KW_PLUS = u'加'
-KW_RETURN = u'滚犊子吧'
-KW_SAY = u'唠唠'
+KW_RETURN = u'甩出刻'
+KW_SAY = u'摆哈儿'
 KW_STEP = u'步'
-KW_THEN = u'吗？要行咧就'
+KW_THEN = u'啵？要是呢话'
 KW_TIMES = u'乘'
-KW_TO = u'到'
+KW_TO = u'拢'
 
 KEYWORDS = (
     KW_BANG,
