@@ -66,24 +66,24 @@ class SichuanParseExprTest(unittest.TestCase):
                          VariableExpr(Token(TK_IDENTIFIER, u'老王'))))
 
   def testParseCallExpr(self):
-    self.assertEqual(ParseExprFromStr(u'整老王')[0],
+    self.assertEqual(ParseExprFromStr(u'喊老王')[0],
                      CallExpr(Token(TK_IDENTIFIER, u'老王'), []))
-    self.assertEqual(ParseExprFromStr(u'整老王（5）')[0],
+    self.assertEqual(ParseExprFromStr(u'喊老王（5）')[0],
                      CallExpr(Token(TK_IDENTIFIER, u'老王'),
                               [LiteralExpr(Token(TK_INTEGER_LITERAL, 5))]))
-    self.assertEqual(ParseExprFromStr(u'整老王(6)')[0],
+    self.assertEqual(ParseExprFromStr(u'喊老王(6)')[0],
                      CallExpr(Token(TK_IDENTIFIER, u'老王'),
                               [LiteralExpr(Token(TK_INTEGER_LITERAL, 6))]))
-    self.assertEqual(ParseExprFromStr(u'整老王(老刘，6)')[0],
+    self.assertEqual(ParseExprFromStr(u'喊老王(老刘，6)')[0],
                      CallExpr(Token(TK_IDENTIFIER, u'老王'),
                               [VariableExpr(Token(TK_IDENTIFIER, u'老刘')),
                                LiteralExpr(Token(TK_INTEGER_LITERAL, 6))]))
-    self.assertEqual(ParseExprFromStr(u'整老王(“你”，老刘，6)')[0],
+    self.assertEqual(ParseExprFromStr(u'喊老王(“你”，老刘，6)')[0],
                      CallExpr(Token(TK_IDENTIFIER, u'老王'),
                               [LiteralExpr(Token(TK_STRING_LITERAL, u'你')),
                                VariableExpr(Token(TK_IDENTIFIER, u'老刘')),
                                LiteralExpr(Token(TK_INTEGER_LITERAL, 6))]))
-    self.assertEqual(ParseExprFromStr(u'整老王(“你”,老刘，6)')[0],
+    self.assertEqual(ParseExprFromStr(u'喊老王(“你”,老刘，6)')[0],
                      CallExpr(Token(TK_IDENTIFIER, u'老王'),
                               [LiteralExpr(Token(TK_STRING_LITERAL, u'你')),
                                VariableExpr(Token(TK_IDENTIFIER, u'老刘')),
@@ -154,19 +154,19 @@ class SichuanParseExprTest(unittest.TestCase):
                          Keyword(u'小'),
                          LiteralExpr(Token(TK_INTEGER_LITERAL, 6))
                      ))
-    self.assertEqual(ParseExprFromStr(u'老王跟老刘一样一样的')[0],
+    self.assertEqual(ParseExprFromStr(u'老王跟倒老刘一模一样呢')[0],
                      ComparisonExpr(
                          VariableExpr(Token(TK_IDENTIFIER, u'老王')),
-                         Keyword(u'一样一样的'),
+                         Keyword(u'一模一样呢'),
                          VariableExpr(Token(TK_IDENTIFIER, u'老刘'))
                      ))
-    self.assertEqual(ParseExprFromStr(u'老王加5跟6不是一样一样的')[0],
+    self.assertEqual(ParseExprFromStr(u'老王加5跟倒6不一样')[0],
                      ComparisonExpr(
                          ArithmeticExpr(
                              VariableExpr(Token(TK_IDENTIFIER, u'老王')),
                              Keyword(u'加'),
                              LiteralExpr(Token(TK_INTEGER_LITERAL, 5))),
-                         Keyword(u'不是一样一样的'),
+                         Keyword(u'不一样'),
                          LiteralExpr(Token(TK_INTEGER_LITERAL, 6))
                      ))
 
@@ -190,7 +190,7 @@ class SichuanParseExprTest(unittest.TestCase):
 class sichuanParseStatementTest(unittest.TestCase):
   def testParseConditional(self):
     self.assertEqual(
-        ParseStmtFromStr(u'瞅瞅：老王比五大吗？要行咧就唠唠：老王。')[0],
+        ParseStmtFromStr(u'看哈儿：老王比五大啵？要是呢话摆哈儿：老王。')[0],
         Statement(STMT_CONDITIONAL,
                   (ComparisonExpr(
                       VariableExpr(Token(TK_IDENTIFIER, u'老王')),
@@ -209,21 +209,21 @@ class sichuanTest(unittest.TestCase):
 
   def testRunHelloWorld(self):
     self.assertEqual(
-        Run(u'唠唠：“这旮旯儿嗷嗷美好哇！”。'),
-        u'这旮旯儿嗷嗷美好哇！\n')
+        Run(u'摆哈儿：“这踏踏儿巴适得板！”。'),
+        u'这踏踏儿巴适得板！\n')
 
   def testRunHelloWorld2(self):
     self.assertEqual(
-        Run(u'唠唠：“你那旮旯儿也挺美好哇！”。'),
-        u'你那旮旯儿也挺美好哇！\n')
+        Run(u'摆哈儿：“你那踏踏儿也巴适得板！”。'),
+        u'你那踏踏儿也巴适得板！\n')
 
   def testVarDecl(self):
     self.assertEqual(
-        Run(u'老张是活雷锋。'), '')
+        Run(u'老张凶得很。'), '')
 
   def testVarAssignment(self):
     self.assertEqual(
-        Run(u'老张是活雷锋。\n老张装250。\n唠唠：老张。'), '250\n')
+        Run(u'老张凶得很。\n老张巴倒250。\n摆哈儿：老张。'), '250\n')
 
   def testTokenize(self):
     self.assertEqual(
@@ -233,10 +233,11 @@ class sichuanTest(unittest.TestCase):
         list(BasicTokenize(u'【 阶  乘   】')),
         [Token(TK_IDENTIFIER, u'阶乘'),])
     self.assertEqual(
-        list(BasicTokenize(u'【阶乘】（几）')),
+        list(BasicTokenize(u'【阶乘】（好多）')),
         [Token(TK_IDENTIFIER, u'阶乘'),
          Keyword(u'（'),
-         Token(TK_CHAR, u'几'),
+         Token(TK_CHAR, u'好'),
+         Token(TK_CHAR, u'多'),
          Keyword(u'）'),])
     self.assertEqual(
         list(BasicTokenize(u'“ ”')),
@@ -274,37 +275,37 @@ class sichuanTest(unittest.TestCase):
         list(ParseChars(u'老张')),
         [Token(TK_IDENTIFIER, u'老张')])
     self.assertEqual(
-        list(Tokenize(u'老张是活雷锋')),
+        list(Tokenize(u'老张凶得很')),
         [Token(TK_IDENTIFIER, u'老张'),
-         Keyword(u'是活雷锋')])
+         Keyword(u'凶得很')])
     self.assertEqual(
-        list(Tokenize(u'老张是 活雷\n锋 。 ')),
+        list(Tokenize(u'老张 凶\n得很 。 ')),
         [Token(TK_IDENTIFIER, u'老张'),
-         Keyword(u'是活雷锋'),
+         Keyword(u'凶得很'),
          Keyword(u'。'),
         ])
     self.assertEqual(
-        list(Tokenize(u'老张是活雷锋。\n老王是活雷锋。\n')),
+        list(Tokenize(u'老张凶得很。\n老王凶得很。\n')),
         [Token(TK_IDENTIFIER, u'老张'),
-         Keyword(u'是活雷锋'),
+         Keyword(u'凶得很'),
          Keyword(u'。'),
          Token(TK_IDENTIFIER, u'老王'),
-         Keyword(u'是活雷锋'),
+         Keyword(u'凶得很'),
          Keyword(u'。'),
         ])
     self.assertEqual(
-        list(Tokenize(u'老张装250。\n老王装老张。\n')),
+        list(Tokenize(u'老张巴倒250。\n老王巴倒老张。\n')),
         [Token(TK_IDENTIFIER, u'老张'),
-         Keyword(u'装'),
+         Keyword(u'巴倒'),
          Token(TK_INTEGER_LITERAL, 250),
          Keyword(u'。'),
          Token(TK_IDENTIFIER, u'老王'),
-         Keyword(u'装'),
+         Keyword(u'巴倒'),
          Token(TK_IDENTIFIER, u'老张'),
          Keyword(u'。')])
     self.assertEqual(
-        list(Tokenize(u'唠唠：“你好”。')),
-        [Keyword(u'唠唠'),
+        list(Tokenize(u'摆哈儿：“你好”。')),
+        [Keyword(u'摆哈儿'),
          Keyword(u'：'),
          Keyword(u'“'),
          Token(TK_STRING_LITERAL, u'你好'),
@@ -327,33 +328,33 @@ class sichuanTest(unittest.TestCase):
     
   def testTokenizeLoop(self):
     self.assertEqual(
-        list(Tokenize(u'老王从1到9磨叽：磨叽完了。')),
+        list(Tokenize(u'老王从1拢9打转转儿：转完了。')),
         [Token(TK_IDENTIFIER, u'老王'),
          Keyword(u'从'),
          Token(TK_INTEGER_LITERAL, 1),
-         Keyword(u'到'),
+         Keyword(u'拢'),
          Token(TK_INTEGER_LITERAL, 9),
-         Keyword(u'磨叽：'),
-         Keyword(u'磨叽完了'),
+         Keyword(u'打转转儿：'),
+         Keyword(u'转完了'),
          Keyword(u'。'),
         ])
 
   def testTokenizeCompound(self):
     self.assertEqual(
-        list(Tokenize(u'开整：\n  唠唠：老王。\n整完了。')),
-        [Keyword(u'开整：'),
-         Keyword(u'唠唠'),
+        list(Tokenize(u'开始：\n  摆哈儿：老王。\n刹脚。')),
+        [Keyword(u'开始：'),
+         Keyword(u'摆哈儿'),
          Keyword(u'：'),
          Token(TK_IDENTIFIER, u'老王'),
          Keyword(u'。'),
-         Keyword(u'整完了'),
+         Keyword(u'刹脚'),
          Keyword(u'。'),])
 
   def testTokenizingIncrements(self):
     self.assertEqual(
-        list(Tokenize(u'老王走走')),
+        list(Tokenize(u'老王走哈儿')),
         [Token(TK_IDENTIFIER, u'老王'),
-         Keyword(u'走走'),])
+         Keyword(u'走哈儿'),])
     self.assertEqual(
         list(Tokenize(u'老王走两步')),
         [Token(TK_IDENTIFIER, u'老王'),
@@ -364,13 +365,13 @@ class sichuanTest(unittest.TestCase):
 
   def testTokenizingDecrements(self):
     self.assertEqual(
-        list(Tokenize(u'老王退退')),
+        list(Tokenize(u'老王倒起走哈儿')),
         [Token(TK_IDENTIFIER, u'老王'),
-         Keyword(u'退退'),])
+         Keyword(u'倒起走哈儿'),])
     self.assertEqual(
-        list(Tokenize(u'老王退三步')),
+        list(Tokenize(u'老王倒起走三步')),
         [Token(TK_IDENTIFIER, u'老王'),
-         Keyword(u'退'),
+         Keyword(u'倒起走'),
          Token(TK_INTEGER_LITERAL, 3),
          Keyword(u'步'),
         ])
@@ -384,21 +385,21 @@ class sichuanTest(unittest.TestCase):
 
   def testTokenizingFuncDef(self):
     self.assertEqual(
-        list(Tokenize(u'写九九表咋整：整完了。')),
+        list(Tokenize(u'写九九表啷个办：刹脚。')),
         [Token(TK_IDENTIFIER, u'写九九表'),
-         Keyword(u'咋整：'),
-         Keyword(u'整完了'),
+         Keyword(u'啷个办：'),
+         Keyword(u'刹脚'),
          Keyword(u'。'),])
 
   def testTokenizingFuncCall(self):
     self.assertEqual(
-        list(Tokenize(u'整写九九表')),
-        [Keyword(u'整'),
+        list(Tokenize(u'喊写九九表')),
+        [Keyword(u'喊'),
          Token(TK_IDENTIFIER, u'写九九表'),])
     
   def testParsingIncrements(self):
     self.assertEqual(
-        ParseToAst(u'老王走走。'),
+        ParseToAst(u'老王走哈儿。'),
         [Statement(
             STMT_INC_BY,
             (Token(TK_IDENTIFIER, u'老王'),
@@ -412,13 +413,13 @@ class sichuanTest(unittest.TestCase):
 
   def testParsingDecrements(self):
     self.assertEqual(
-        ParseToAst(u'老王退退。'),
+        ParseToAst(u'老王倒起走哈儿。'),
         [Statement(
             STMT_DEC_BY,
             (Token(TK_IDENTIFIER, u'老王'),
              LiteralExpr(Token(TK_INTEGER_LITERAL, 1))))])
     self.assertEqual(
-        ParseToAst(u'老王退三步。'),
+        ParseToAst(u'老王倒起走三步。'),
         [Statement(
             STMT_DEC_BY,
             (Token(TK_IDENTIFIER, u'老王'),
@@ -426,7 +427,7 @@ class sichuanTest(unittest.TestCase):
 
   def testParsingLoop(self):
     self.assertEqual(
-        ParseToAst(u'老王从1到9磨叽：磨叽完了。'),
+        ParseToAst(u'老王从1拢9打转转儿：转完了。'),
         [Statement(
             STMT_LOOP,
             (Token(TK_IDENTIFIER, u'老王'),
@@ -436,7 +437,7 @@ class sichuanTest(unittest.TestCase):
 
   def DisabledTestParsingComparison(self):
     self.assertEquals(
-        ParseToAst(u'唠唠：2比5大。'),
+        ParseToAst(u'摆哈儿：2比5大。'),
         [Statement(
             STMT_SAY,
             ComparisonExpr(2, 'GT', 5)
@@ -444,14 +445,14 @@ class sichuanTest(unittest.TestCase):
 
   def testParsingFuncDef(self):
     self.assertEqual(
-        ParseToAst(u'写九九表咋整：整完了。'),
+        ParseToAst(u'写九九表啷个办：刹脚。'),
         [Statement(STMT_FUNC_DEF,
                    (Token(TK_IDENTIFIER, u'写九九表'),
                     [],  # Formal parameters.
                     []  # Function body.
                    ))])
     self.assertEqual(
-        ParseToAst(u'写九九表咋整：唠唠：1。整完了。'),
+        ParseToAst(u'写九九表啷个办：摆哈儿：1。刹脚。'),
         [Statement(STMT_FUNC_DEF,
                    (Token(TK_IDENTIFIER, u'写九九表'),
                     [],  # Formal parameters.
@@ -463,202 +464,202 @@ class sichuanTest(unittest.TestCase):
     
   def testParsingFuncDefWithParam(self):
     self.assertEqual(
-        ParseToAst(u'【阶乘】（几）咋整：整完了。'),
+        ParseToAst(u'【阶乘】（好多）啷个办：刹脚。'),
         [Statement(STMT_FUNC_DEF,
                    (Token(TK_IDENTIFIER, u'阶乘'),
-                    [Token(TK_IDENTIFIER, u'几')],  # Formal parameters.
+                    [Token(TK_IDENTIFIER, u'好多')],  # Formal parameters.
                     []  # Function body.
                    ))])
     
   def testParsingFuncCallWithParam(self):
     self.assertEqual(
-        ParseToAst(u'整【阶乘】（五）。'),
+        ParseToAst(u'喊【阶乘】（五）。'),
         [Statement(STMT_CALL,
                    CallExpr(Token(TK_IDENTIFIER, u'阶乘'),
                             [LiteralExpr(Token(TK_INTEGER_LITERAL, 5))]))])
 
   def testVarAssignmentFromVar(self):
     self.assertEqual(
-        Run(u'老张是活雷锋。\n老王是活雷锋。\n'
-                    u'老张装250。\n老王装老张。\n唠唠：老王。'), '250\n')
+        Run(u'老张凶得很。\n老王凶得很。\n'
+                    u'老张巴倒250。\n老王巴倒老张。\n摆哈儿：老王。'), '250\n')
 
   def testIncrements(self):
     self.assertEqual(
-        Run(u'老张是活雷锋。老张装二。老张走走。唠唠：老张。'),
+        Run(u'老张凶得很。老张巴倒二。老张走哈儿。摆哈儿：老张。'),
         '3\n')
     self.assertEqual(
-        Run(u'老张是活雷锋。老张装三。老张走五步。唠唠：老张。'),
+        Run(u'老张凶得很。老张巴倒三。老张走五步。摆哈儿：老张。'),
         '8\n')
 
   def testDecrements(self):
     self.assertEqual(
-        Run(u'老张是活雷锋。老张装二。老张退退。唠唠：老张。'),
+        Run(u'老张凶得很。老张巴倒二。老张倒起走哈儿。摆哈儿：老张。'),
         '1\n')
     self.assertEqual(
-        Run(u'老张是活雷锋。老张装三。老张退五步。唠唠：老张。'),
+        Run(u'老张凶得很。老张巴倒三。老张倒起走五步。摆哈儿：老张。'),
         '-2\n')
 
   def testLoop(self):
     self.assertEqual(
-        Run(u'老张从1到3磨叽：唠唠：老张。磨叽完了。'),
+        Run(u'老张从1拢3打转转儿：摆哈儿：老张。转完了。'),
         '1\n2\n3\n')
 
   def testLoopWithNoStatement(self):
     self.assertEqual(
-        Run(u'老张从1到2磨叽：磨叽完了。'),
+        Run(u'老张从1拢2打转转儿：转完了。'),
         '')
 
   def testLoopWithMultipleStatements(self):
     self.assertEqual(
-        Run(u'老张从1到2磨叽：唠唠：老张。唠唠：老张加一。磨叽完了。'),
+        Run(u'老张从1拢2打转转儿：摆哈儿：老张。摆哈儿：老张加一。转完了。'),
         '1\n2\n2\n3\n')
 
   def testPrintBool(self):
     self.assertEqual(
-        Run(u'唠唠：五比二大。'),
+        Run(u'摆哈儿：五比二大。'),
         u'对\n')
     self.assertEqual(
-        Run(u'唠唠：五比二大、五比二小、一跟2一样一样的、1跟二不是一样一样的。'),
+        Run(u'摆哈儿：五比二大、五比二小、一跟倒2一模一样呢、1跟倒二不一样。'),
         u'对错错对\n')
 
   def testArithmetic(self):
     self.assertEqual(
-      Run(u'唠唠：五加二。'),
+      Run(u'摆哈儿：五加二。'),
       u'7\n')
     self.assertEqual(
-      Run(u'唠唠：五减二。'),
+      Run(u'摆哈儿：五减二。'),
       u'3\n')
     self.assertEqual(
-      Run(u'唠唠：五乘二。'),
+      Run(u'摆哈儿：五乘二。'),
       u'10\n')
     self.assertEqual(
-      Run(u'唠唠：十除以二。'),
+      Run(u'摆哈儿：十除以二。'),
       u'5.0\n')
     self.assertEqual(
-      Run(u'唠唠：五加七乘二。'),
+      Run(u'摆哈儿：五加七乘二。'),
       u'19\n')
     self.assertEqual(
-      Run(u'唠唠：（五加七）乘二。'),
+      Run(u'摆哈儿：（五加七）乘二。'),
       u'24\n')
     self.assertEqual(
-      Run(u'唠唠：(五加七)乘二。'),
+      Run(u'摆哈儿：(五加七)乘二。'),
       u'24\n')
     self.assertEqual(
-      Run(u'唠唠：(五减（四减三）)乘二。'),
+      Run(u'摆哈儿：(五减（四减三）)乘二。'),
       u'8\n')
 
   def testConcat(self):
     self.assertEqual(
-        Run(u'唠唠：“牛”、二。'),
+        Run(u'摆哈儿：“牛”、二。'),
         u'牛2\n')
     self.assertEqual(
-        Run(u'唠唠：“老王”、665加一。'),
+        Run(u'摆哈儿：“老王”、665加一。'),
         u'老王666\n')
 
   def testCompound(self):
     self.assertEqual(
-        Run(u'开整：整完了。'),
+        Run(u'开始：刹脚。'),
         u'')
     self.assertEqual(
-        Run(u'开整：唠唠：1。整完了。'),
+        Run(u'开始：摆哈儿：1。刹脚。'),
         u'1\n')
     self.assertEqual(
-        Run(u'开整：唠唠：1。唠唠：2。整完了。'),
+        Run(u'开始：摆哈儿：1。摆哈儿：2。刹脚。'),
         u'1\n2\n')
 
   def testRunConditional(self):
     self.assertEqual(
-        Run(u'瞅瞅：5比2大吗？要行咧就唠唠：“OK”。'),
+        Run(u'看哈儿：5比2大啵？要是呢话摆哈儿：“OK”。'),
         u'OK\n')
     self.assertEqual(
-        Run(u'瞅瞅：5比2大吗？要行咧就开整：\n'
-            u'整完了。'),
+        Run(u'看哈儿：5比2大啵？要是呢话开始：\n'
+            u'刹脚。'),
         u'')
     self.assertEqual(
-        Run(u'瞅瞅：5比2大吗？\n'
-            u'要行咧就开整：\n'
-            u'    唠唠：5。\n'
-            u'整完了。'),
+        Run(u'看哈儿：5比2大啵？\n'
+            u'要是呢话开始：\n'
+            u'    摆哈儿：5。\n'
+            u'刹脚。'),
         u'5\n')
     self.assertEqual(
-        Run(u'瞅瞅：5比6大吗？要行咧就唠唠：“OK”。\n'
-            u'要不行咧就唠唠：“不OK”。'),
+        Run(u'看哈儿：5比6大啵？要是呢话摆哈儿：“OK”。\n'
+            u'不是呢话摆哈儿：“不OK”。'),
         u'不OK\n')
     self.assertEqual(
-        Run(u'瞅瞅：5比6大吗？\n'
-            u'要行咧就唠唠：“OK”。\n'
-            u'要不行咧就开整：\n'
-            u'  唠唠：“不OK”。\n'
-            u'  唠唠：“还是不OK”。\n'
-            u'整完了。'),
+        Run(u'看哈儿：5比6大啵？\n'
+            u'要是呢话摆哈儿：“OK”。\n'
+            u'不是呢话开始：\n'
+            u'  摆哈儿：“不OK”。\n'
+            u'  摆哈儿：“还是不OK”。\n'
+            u'刹脚。'),
         u'不OK\n还是不OK\n')
     # Else should match the last If.
     self.assertEqual(
         Run(u'''
-          瞅瞅：2比1大吗？   # condition 1: True
-          要行咧就瞅瞅：2比3大吗？  # condition 2: False
-              要行咧就唠唠：“A”。  # for condition 2
-              要不行咧就唠唠：“B”。# for condition 2
+          看哈儿：2比1大啵？   # condition 1: True
+          要是呢话看哈儿：2比3大啵？  # condition 2: False
+              要是呢话摆哈儿：“A”。  # for condition 2
+              不是呢话摆哈儿：“B”。# for condition 2
           '''),
         u'B\n')
 
   def testRunFunc(self):
     self.assertEqual(
-        Run(u'埋汰咋整：唠唠：“你虎了吧唧”。整完了。'),
+        Run(u'埋汰啷个办：摆哈儿：“你虎了吧唧”。刹脚。'),
         u'')
     self.assertEqual(
-        Run(u'埋汰咋整：唠唠：“你虎了吧唧”。整完了。整埋汰。'),
+        Run(u'埋汰啷个办：摆哈儿：“你虎了吧唧”。刹脚。喊埋汰。'),
         u'你虎了吧唧\n')
 
   def testFuncCallWithParam(self):
     self.assertEqual(
-        Run(u'【加一】（几）咋整：唠唠：几加一。整完了。\n'
-                    u'整【加一】（五）。'),
+        Run(u'【加一】（好多）啷个办：摆哈儿：好多加一。刹脚。\n'
+                    u'喊【加一】（五）。'),
         u'6\n')
 
   def testFuncWithReturnValue(self):
     self.assertEqual(
-        Run(u'【加一】（几）咋整：滚犊子吧几加一。整完了。\n'
-                    u'唠唠：整【加一】（二）。'),
+        Run(u'【加一】（好多）啷个办：爬远点好多加一。刹脚。\n'
+                    u'摆哈儿：喊【加一】（二）。'),
         u'3\n')
 
   def testRecursiveFunc(self):
     self.assertEqual(
         Run(u'''
-【阶乘】（几）咋整：
-瞅瞅：几比一小吗？
-要行咧就滚犊子吧一。
-滚犊子吧几乘整【阶乘】（几减一）。
-整完了。
+【阶乘】（好多）啷个办：
+看哈儿：好多比一小啵？
+要是呢话爬远点一。
+爬远点好多乘整【阶乘】（好多减一）。
+刹脚。
 
-唠唠：整【阶乘】（五）。
+摆哈儿：喊【阶乘】（五）。
         '''),
         u'120\n')
 
   def testMultiArgFunc(self):
     self.assertEqual(
         Run(u'''
-求和（甲，乙）咋整：
-  滚犊子吧 甲加乙。
-整完了。
+求和（甲，乙）啷个办：
+  爬远点 甲加乙。
+刹脚。
 
-唠唠：整求和（五，七）。
+摆哈儿：喊求和（五，七）。
         '''),
         u'12\n')
     self.assertEqual(
         Run(u'''
-求和（甲，乙）咋整：
-  唠唠：甲加乙。
-整完了。
+求和（甲，乙）啷个办：
+  摆哈儿：甲加乙。
+刹脚。
 
-整求和（五，七）。
+喊求和（五，七）。
         '''),
         u'12\n')
 
   def testNormalizingBang(self):
     self.assertEqual(
-        Run(u'【加一】（几）咋整：唠唠：几加一！整完了！\n'
-                    u'整【加一】（五）！'),
+        Run(u'【加一】（好多）啷个办：摆哈儿：好多加一！刹脚！\n'
+                    u'喊【加一】（五）！'),
         u'6\n')
     
 if __name__ == '__main__':
