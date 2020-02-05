@@ -47,7 +47,7 @@ KW_OPEN_PAREN_NARROW = '('
 KW_OPEN_QUOTE = u'“'
 KW_PERIOD = u'。'
 KW_PLUS = u'加'
-KW_RETURN = u'甩出刻'
+KW_RETURN = u'爬远点'
 KW_SAY = u'摆哈儿'
 KW_STEP = u'步'
 KW_THEN = u'啵？要是呢话'
@@ -167,10 +167,10 @@ class Expr:
     """Translates this expression to Python."""
     raise Exception('%s must implement ToPython().' % (type(self),))
 
-def _dongbei_str(value):
-  """Converts a value to its dongbei string."""
+def _sichuan_str(value):
+  """Converts a value to its sichuan string."""
   if value is None:
-    return '啥也不是'
+    return '啥子都不是'
   if type(value) == bool:
     return '对' if value else '错'
   return str(value)
@@ -186,7 +186,7 @@ class ConcatExpr(Expr):
     return self.exprs == other.exprs
 
   def ToPython(self):
-    return ' + '.join('_dongbei_str(%s)' % (
+    return ' + '.join('_sichuan_str(%s)' % (
         expr.ToPython(),) for expr in self.exprs)
 
 ARITHMETIC_OPERATION_TO_PYTHON = {
@@ -278,7 +278,7 @@ class CallExpr(Expr):
         GetPythonVarName(self.func.value),
         ', '.join(arg.ToPython() for arg in self.args))
 
-# Maps a dongbei comparison keyword to the Python version.
+# Maps a sichuan comparison keyword to the Python version.
 COMPARISON_KEYWORD_TO_PYTHON = {
     KW_GREATER: '>',
     KW_LESS: '<',
@@ -454,7 +454,7 @@ def GetPythonVarName(var):
   if var in vars:
     return vars[var]
 
-  generated_var = '_db_var%d' % (len(vars),)
+  generated_var = '_sc_var%d' % (len(vars),)
   vars[var] = generated_var
   return generated_var
 
@@ -680,7 +680,7 @@ def ParseStmt(tokens):
 
   orig_tokens = tokens
 
-  # Parse 开整：
+  # Parse 开始：
   begin, tokens = TryConsumeToken(Keyword(KW_BEGIN), tokens)
   if begin:
     stmts, tokens = ParseStmts(tokens)
@@ -690,7 +690,7 @@ def ParseStmt(tokens):
     _, tokens = ConsumeToken(Keyword(KW_PERIOD), tokens)
     return Statement(STMT_COMPOUND, stmts), tokens
 
-  # Parse 唠唠：
+  # Parse 摆哈儿：
   say, tokens = TryConsumeToken(Keyword(KW_SAY), tokens)
   if say:
     colon, tokens = ConsumeToken(Keyword(KW_COLON), tokens)
@@ -698,20 +698,20 @@ def ParseStmt(tokens):
     _, tokens = ConsumeToken(Keyword(KW_PERIOD), tokens)
     return (Statement(STMT_SAY, expr), tokens)
 
-  # Parse 整
+  # Parse 喊
   call_expr, tokens = ParseCallExpr(tokens)
   if call_expr:
     _, tokens = ConsumeToken(Keyword(KW_PERIOD), tokens)
     return Statement(STMT_CALL, call_expr), tokens
 
-  # Parse 滚犊子吧
+  # Parse 爬远点
   ret, tokens = TryConsumeToken(Keyword(KW_RETURN), tokens)
   if ret:
     expr, tokens = ParseExpr(tokens)
     _, tokens = ConsumeToken(Keyword(KW_PERIOD), tokens)
     return (Statement(STMT_RETURN, expr), tokens)
 
-  # Parse 瞅瞅
+  # Parse 看哈儿
   check, tokens = TryConsumeToken(Keyword(KW_CHECK), tokens)
   if check:
     expr, tokens = ParseExpr(tokens)
@@ -732,20 +732,20 @@ def ParseStmt(tokens):
 
   # Code below is for statements that start with an identifier.
 
-  # Parse 是活雷锋
+  # Parse 凶得很
   is_var, tokens = TryConsumeToken(Keyword(KW_IS_VAR), tokens)
   if is_var:
     _, tokens = ConsumeToken(Keyword(KW_PERIOD), tokens)
     return (Statement(STMT_VAR_DECL, id), tokens)
 
-  # Parse 装
+  # Parse 巴倒
   become, tokens = TryConsumeToken(Keyword(KW_BECOME), tokens)
   if become:
     expr, tokens = ParseExpr(tokens)
     _, tokens = ConsumeToken(Keyword(KW_PERIOD), tokens)
     return (Statement(STMT_ASSIGN, (id, expr)), tokens)
 
-  # Parse 走走
+  # Parse 走哈儿
   inc, tokens = TryConsumeToken(Keyword(KW_INC), tokens)
   if inc:
     _, tokens = ConsumeToken(Keyword(KW_PERIOD), tokens)
@@ -762,7 +762,7 @@ def ParseStmt(tokens):
     _, tokens = ConsumeToken(Keyword(KW_PERIOD), tokens)
     return (Statement(STMT_INC_BY, (id, expr)), tokens)
 
-  # Parse 退退
+  # Parse 倒起走哈儿
   dec, tokens = TryConsumeToken(Keyword(KW_DEC), tokens)
   if dec:
     _, tokens = ConsumeToken(Keyword(KW_PERIOD), tokens)
@@ -770,7 +770,7 @@ def ParseStmt(tokens):
                       (id, LiteralExpr(Token(TK_INTEGER_LITERAL, 1)))),
             tokens)
 
-  # Parse 退X步
+  # Parse 倒起走X步
   dec, tokens = TryConsumeToken(
       Keyword(KW_DEC_BY), tokens)
   if dec:
@@ -779,7 +779,7 @@ def ParseStmt(tokens):
     _, tokens = ConsumeToken(Keyword(KW_PERIOD), tokens)
     return (Statement(STMT_DEC_BY, (id, expr)), tokens)
 
-  # Parse 磨叽
+  # Parse 打转转儿
   from_, tokens = TryConsumeToken(Keyword(KW_FROM), tokens)
   if from_:
     from_expr, tokens = ParseExpr(tokens)
@@ -791,7 +791,7 @@ def ParseStmt(tokens):
     _, tokens = ConsumeToken(Keyword(KW_PERIOD), tokens)
     return (Statement(STMT_LOOP, (id, from_expr, to_expr, stmts)), tokens)
 
-  # Parse 咋整
+  # Parse 啷个办
   open_paren, tokens = TryConsumeToken(
       Keyword(KW_OPEN_PAREN), tokens)
   if open_paren:
@@ -849,7 +849,7 @@ def TranslateStatementToPython(stmt, indent = ''):
 
   if stmt.kind == STMT_SAY:
     expr = stmt.value
-    return indent + '_db_append_output("%%s\\n" %% (_dongbei_str(%s),))' % (
+    return indent + '_sc_append_output("%%s\\n" %% (_sichuan_str(%s),))' % (
         expr.ToPython(),)
 
   if stmt.kind == STMT_INC_BY:
@@ -915,7 +915,7 @@ def TranslateStatementToPython(stmt, indent = ''):
       code += TranslateStatementToPython(else_stmt, indent + '  ')
     return code
     
-  sys.exit(u'我不懂 %s 语句咋执行。' % (stmt.kind))
+  sys.exit(u'我不晓得 %s 语句咋个跑。' % (stmt.kind))
   
 def TranslateTokensToPython(tokens):
   statements, tokens = ParseStmts(tokens)
@@ -931,25 +931,25 @@ def ParseToAst(code):
   assert not tokens, ('多余符号：%s' % (tokens,))
   return statements
 
-_db_output = ''
-def _db_append_output(s):
-  global _db_output
-  _db_output += s
+_sc_output = ''
+def _sc_append_output(s):
+  global _sc_output
+  _sc_output += s
 
 def Run(code):
   tokens = list(Tokenize(code))
   py_code = TranslateTokensToPython(tokens)
   print('Python 代码：')
   print('%s' % (py_code,))
-  global _db_output
-  _db_output = ''
+  global _sc_output
+  _sc_output = ''
   # See https://stackoverflow.com/questions/871887/using-exec-with-recursive-functions
   # Use the same dictionary for local and global definitions.
-  # Needed for defining recursive dongbei functions.
+  # Needed for defining recursive sichuan functions.
   exec(py_code, globals(), globals())
   print('运行结果：')
-  print('%s' % (_db_output,))
-  return _db_output
+  print('%s' % (_sc_output,))
+  return _sc_output
 
 
 if __name__ == '__main__':
