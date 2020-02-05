@@ -8,39 +8,39 @@ import unittest
 # Add the repo root to the Python module path.
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
-from src import dongbei
-from src.dongbei import ArithmeticExpr
-from src.dongbei import LiteralExpr
-from src.dongbei import BasicTokenize
-from src.dongbei import CallExpr
-from src.dongbei import ComparisonExpr
-from src.dongbei import ConcatExpr
-from src.dongbei import Keyword
-from src.dongbei import ParenExpr
-from src.dongbei import ParseChars
-from src.dongbei import ParseExprFromStr
-from src.dongbei import ParseInteger
-from src.dongbei import ParseStmtFromStr
-from src.dongbei import ParseToAst
-from src.dongbei import Run
-from src.dongbei import STMT_ASSIGN
-from src.dongbei import STMT_CALL
-from src.dongbei import STMT_CONDITIONAL
-from src.dongbei import STMT_DEC_BY
-from src.dongbei import STMT_FUNC_DEF
-from src.dongbei import STMT_INC_BY
-from src.dongbei import STMT_LOOP
-from src.dongbei import STMT_SAY
-from src.dongbei import Statement
-from src.dongbei import TK_CHAR
-from src.dongbei import TK_IDENTIFIER
-from src.dongbei import TK_INTEGER_LITERAL
-from src.dongbei import TK_STRING_LITERAL
-from src.dongbei import Token
-from src.dongbei import Tokenize
-from src.dongbei import VariableExpr
+from src import sichuan
+from src.sichuan import ArithmeticExpr
+from src.sichuan import LiteralExpr
+from src.sichuan import BasicTokenize
+from src.sichuan import CallExpr
+from src.sichuan import ComparisonExpr
+from src.sichuan import ConcatExpr
+from src.sichuan import Keyword
+from src.sichuan import ParenExpr
+from src.sichuan import ParseChars
+from src.sichuan import ParseExprFromStr
+from src.sichuan import ParseInteger
+from src.sichuan import ParseStmtFromStr
+from src.sichuan import ParseToAst
+from src.sichuan import Run
+from src.sichuan import STMT_ASSIGN
+from src.sichuan import STMT_CALL
+from src.sichuan import STMT_CONDITIONAL
+from src.sichuan import STMT_DEC_BY
+from src.sichuan import STMT_FUNC_DEF
+from src.sichuan import STMT_INC_BY
+from src.sichuan import STMT_LOOP
+from src.sichuan import STMT_SAY
+from src.sichuan import Statement
+from src.sichuan import TK_CHAR
+from src.sichuan import TK_IDENTIFIER
+from src.sichuan import TK_INTEGER_LITERAL
+from src.sichuan import TK_STRING_LITERAL
+from src.sichuan import Token
+from src.sichuan import Tokenize
+from src.sichuan import VariableExpr
 
-class DongbeiParseExprTest(unittest.TestCase):
+class SichuanParseExprTest(unittest.TestCase):
   def testParseInteger(self):
     self.assertEqual(ParseExprFromStr(u'5')[0],
                      LiteralExpr(Token(TK_INTEGER_LITERAL, 5)))
@@ -187,7 +187,7 @@ class DongbeiParseExprTest(unittest.TestCase):
                          LiteralExpr(Token(TK_STRING_LITERAL, u'哈'))
                      ]))
 
-class DongbeiParseStatementTest(unittest.TestCase):
+class sichuanParseStatementTest(unittest.TestCase):
   def testParseConditional(self):
     self.assertEqual(
         ParseStmtFromStr(u'瞅瞅：老王比五大吗？要行咧就唠唠：老王。')[0],
@@ -203,7 +203,7 @@ class DongbeiParseStatementTest(unittest.TestCase):
                    None
                   )))
   
-class DongbeiTest(unittest.TestCase):
+class sichuanTest(unittest.TestCase):
   def testRunEmptyProgram(self):
     self.assertEqual(Run(''), '')
 
